@@ -11,82 +11,81 @@ import server.ServerTime;
 import server.ServerTimeImpl;
 
 /**
- * Client-side da aplicação.
+ * Partea client a aplica?iei.
  */
 public class MainBerkeley {
 
 	public static void main(String[] args) {
 		try {
-			LocalTime localTime = LocalTime.parse(AppConstants.LOCAL_HOUR, formatter);
-			System.out.println("Horário local: " + formatter.format(localTime));
+			LocalTime oraLocala = LocalTime.parse(AppConstants.LOCAL_HOUR, formatter);
+			System.out.println("Ora localã: " + formatter.format(oraLocala));
 
-			// criação dos servidores (máquinas)
-			ServerTime machine1Server = createMachineServer(1);
-			ServerTime machine2Server = createMachineServer(2);
-			ServerTime machine3Server = createMachineServer(3);
+			// Crearea serverelor (ma?inilor)
+			ServerTime serverMasina1 = createMachineServer(1);
+			ServerTime serverMasina2 = createMachineServer(2);
+			ServerTime serverMasina3 = createMachineServer(3);
 
-			// calcular a média das horas
-			var avgDiff = generateAverageTime(localTime,
-					machine1Server.getLocalTime(),
-					machine2Server.getLocalTime(),
-					machine3Server.getLocalTime());
+			// Calcularea mediei orelor
+			var diferentaMedie = generateAverageTime(oraLocala,
+					serverMasina1.getLocalTime(),
+					serverMasina2.getLocalTime(),
+					serverMasina3.getLocalTime());
 
-			// ajustar o tempo dos servidores
-			machine1Server.adjustTime(localTime, avgDiff);
-			machine2Server.adjustTime(localTime, avgDiff);
-			machine3Server.adjustTime(localTime, avgDiff);
-			localTime = localTime.plusNanos(avgDiff);
+			// Ajustarea timpului serverelor
+			serverMasina1.adjustTime(oraLocala, diferentaMedie);
+			serverMasina2.adjustTime(oraLocala, diferentaMedie);
+			serverMasina3.adjustTime(oraLocala, diferentaMedie);
+			oraLocala = oraLocala.plusNanos(diferentaMedie);
 
-			System.out.println("\nHorários atualizados!");
-			System.out.println("Horário local: " + formatter.format(localTime));
-			System.out.println("Horário servidor 1: " + formatter.format(machine1Server.getLocalTime()));
-			System.out.println("Horário servidor 2: " + formatter.format(machine2Server.getLocalTime()));
-			System.out.println("Horário servidor 3: " + formatter.format(machine3Server.getLocalTime()));
+			System.out.println("\nOre actualizate!");
+			System.out.println("Ora localã: " + formatter.format(oraLocala));
+			System.out.println("Ora serverului 1: " + formatter.format(serverMasina1.getLocalTime()));
+			System.out.println("Ora serverului 2: " + formatter.format(serverMasina2.getLocalTime()));
+			System.out.println("Ora serverului 3: " + formatter.format(serverMasina3.getLocalTime()));
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
 	}
 
 	/**
-	 * Cria um {@link ServerTime} que está associado a uma máquina para ter sua hora
-	 * ajustada.
-	 * 
-	 * @param machineNumber número da máquina
-	 * @return servidor da máquina com sua hora
-	 * @throws Exception ao tentar criar o servidor ou registro
+	 * Creeazã un {@link ServerTime} asociat cu o ma?inã pentru a-i ajusta ora.
+	 *
+	 * @param numarulMasinii numãrul ma?inii
+	 * @return serverul ma?inii cu ora sa
+	 * @throws Exception la încercarea de a crea serverul sau registrul
 	 */
-	private static ServerTime createMachineServer(int machineNumber) throws Exception {
-		String serverName = AppConstants.SERVER_NAME;
-		int serverPort = switch (machineNumber) {
+	private static ServerTime createMachineServer(int numarulMasinii) throws Exception {
+		String numeServer = AppConstants.SERVER_NAME;
+		int portServer = switch (numarulMasinii) {
 			case 1 -> AppConstants.SERVER_PORT_1;
 			case 2 -> AppConstants.SERVER_PORT_2;
 			case 3 -> AppConstants.SERVER_PORT_3;
 			default -> -1;
 		};
-		Registry machineRegistry = LocateRegistry.getRegistry(serverName, serverPort);
-		ServerTime machineServerTime = (ServerTime) machineRegistry.lookup(ServerTimeImpl.class.getSimpleName());
-		LocalTime machineTime = machineServerTime.getLocalTime();
-		System.out.println("Conexão com a máquina " + machineNumber + " estabelecida com sucesso. Hora: "
-				+ formatter.format(machineTime));
-		return machineServerTime;
+		Registry registryMasina = LocateRegistry.getRegistry(numeServer, portServer);
+		ServerTime serverTimpMasina = (ServerTime) registryMasina.lookup(ServerTimeImpl.class.getSimpleName());
+		LocalTime timpMasina = serverTimpMasina.getLocalTime();
+		System.out.println("Conexiune cu ma?ina " + numarulMasinii + " stabilitã cu succes. Ora: "
+				+ formatter.format(timpMasina));
+		return serverTimpMasina;
 	}
 
 	/**
-	 * Calcula a média da hora que deve ser ajustada.<br>
-	 * Hora somada das máquinas (cada uma subtraída pela hora local) dividida pelo
-	 * total de máquinas.
-	 * 
-	 * @param localTime hora local
-	 * @param times     hora das máquinas
-	 * @return hora média calculada
+	 * Calculeazã media orei care trebuie ajustatã.<br>
+	 * Ora sumatã a ma?inilor (fiecare scãzutã din ora localã) împãr?itã la
+	 * numãrul total de ma?ini.
+	 *
+	 * @param oraLocala ora localã
+	 * @param ore       ora ma?inilor
+	 * @return ora medie calculatã
 	 */
-	private static long generateAverageTime(LocalTime localTime, LocalTime... times) {
-		long nanoLocal = localTime.toNanoOfDay();
-		long difServer = 0;
-		for (LocalTime t : times) {
-			difServer += t.toNanoOfDay() - nanoLocal;
+	private static long generateAverageTime(LocalTime oraLocala, LocalTime... ore) {
+		long nanoOraLocala = oraLocala.toNanoOfDay();
+		long diferentaServer = 0;
+		for (LocalTime t : ore) {
+			diferentaServer += t.toNanoOfDay() - nanoOraLocala;
 		}
-		return difServer / times.length;
+		return diferentaServer / ore.length;
 	}
 
 }

@@ -11,22 +11,21 @@ import server.ServerTime;
 import server.ServerTimeImpl;
 
 /**
- * Representação da máquina 2 para ter sua hora ajustada.
+ * Reprezentarea ma?inii 2 pentru a-i ajusta ora.
  */
 public class Machine2 {
 
 	public static void main(String[] args) {
 		try {
-			LocalTime hour = LocalTime.parse(AppConstants.MACHINE_2_HOUR, formatter);
-			ServerTime machineServer = new ServerTimeImpl(hour);
+			LocalTime ora = LocalTime.parse(AppConstants.MACHINE_2_HOUR, formatter);
+			ServerTime serverMasina = new ServerTimeImpl(ora);
 			Registry registry = LocateRegistry.createRegistry(AppConstants.SERVER_PORT_2);
-			registry.rebind(ServerTimeImpl.class.getSimpleName(), machineServer);
-			System.out.println(String.format("Máquina 2 iniciada na porta %s [hora local: %s].",
+			registry.rebind(ServerTimeImpl.class.getSimpleName(), serverMasina);
+			System.out.println(String.format("Ma?ina 2 a fost pornitã pe portul %s [ora localã: %s].",
 					AppConstants.SERVER_PORT_2,
-					AppConstants.formatter.format(hour)));
+					AppConstants.formatter.format(ora)));
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
 	}
-
 }

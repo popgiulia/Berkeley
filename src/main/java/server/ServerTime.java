@@ -5,20 +5,20 @@ import java.rmi.RemoteException;
 import java.time.LocalTime;
 
 /**
- * Interface para que o client-side acesse o servidor.
+ * Interfa?a pentru accesarea serverului de cãtre partea de client.
  */
 public interface ServerTime extends Remote {
 
 	/**
-	 * @return a hora local
+	 * @return ora localã
 	 */
 	LocalTime getLocalTime() throws RemoteException;
 
 	/**
-	 * Ajusta a hora local baseada na hora do servidor com a média de horas.
-	 * 
-	 * @param localTime hora local do servidor
-	 * @param avgDiff   média de horas
+	 * Ajusteazã ora localã bazatã pe ora serverului cu media orelor.
+	 *
+	 * @param localTime ora localã a serverului
+	 * @param avgDiff   media orelor
 	 */
 	void adjustTime(LocalTime localTime, long avgDiff) throws RemoteException;
 }

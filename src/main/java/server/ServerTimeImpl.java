@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import common.AppConstants;
 
 /**
- * Implementação de {@link ServerTime}.
+ * Implementarea {@link ServerTime}.
  */
 @SuppressWarnings("serial")
 public class ServerTimeImpl extends UnicastRemoteObject implements ServerTime {
@@ -31,7 +31,7 @@ public class ServerTimeImpl extends UnicastRemoteObject implements ServerTime {
 		newNanos = newNanos * -1 + avgDiff + thisNanos;
 		LocalTime newLocalTime = LocalTime.ofNanoOfDay(newNanos);
 		this.localTime = newLocalTime;
-		System.out.println("Horário atualizado: " + AppConstants.formatter.format(newLocalTime));
+		System.out.println("Orar actualizat: " + AppConstants.formatter.format(newLocalTime));
 	}
 
 }
